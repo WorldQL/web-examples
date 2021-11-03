@@ -2823,6 +2823,13 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
+memorable-moniker@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/memorable-moniker/-/memorable-moniker-0.5.1.tgz#756a605c62b7381b6baaf75501c57a1a5491d404"
+  integrity sha512-LPT8iYkGlA2vRO7mnD6AlOeaC6K+QrM0BTy0iCfCGdrPXQrncXiE5mb73hD1pDlw2b6w+itjqUIUl9STX81zQA==
+  dependencies:
+    seedrandom "^3.0.5"
+
 memory-fs@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/memory-fs/-/memory-fs-0.2.0.tgz#f2bb25368bc121e391c2520de92969caee0a0290"
@@ -3707,6 +3714,11 @@ scheduler@^0.20.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+seedrandom@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/seedrandom/-/seedrandom-3.0.5.tgz#54edc85c95222525b0c7a6f6b3543d8e0b3aa0a7"
+  integrity sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==
 
 "semver@2 || 3 || 4 || 5", semver@^5.7.1:
   version "5.7.1"
