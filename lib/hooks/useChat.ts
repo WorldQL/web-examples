@@ -12,6 +12,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
   }
 
   interface Message extends OutgoingMessage {
+    colour: string
     timestamp: Date
     key: string
   }
@@ -53,10 +54,14 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
     const timestamp = new Date()
     const keyData = `${message.senderUuid}${json}${timestamp.getTime()}`
     const key = fnv1a(keyData).toString(16)
+    const colour = fnv1a(`${message.senderUuid}${username}`)
+      .toString(16)
+      .slice(0, 6)
 
     const incoming: Message = {
       username,
       text,
+      colour,
       timestamp,
       key,
     }

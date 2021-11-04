@@ -44,9 +44,10 @@ const ChatExample: NextPage = () => {
               Your username is:&nbsp;<strong>{username}</strong>
             </h2>
 
-            {messages.map(({ username, text, timestamp, key }) => (
+            {messages.map(({ username, text, colour, timestamp, key }) => (
               <p key={key}>
-                [{timestamp.toLocaleTimeString()}] <strong>{username}:</strong>
+                [{timestamp.toLocaleTimeString()}]{' '}
+                <strong style={{ color: `#${colour}` }}>{username}:</strong>
                 &nbsp;{text}
               </p>
             ))}
