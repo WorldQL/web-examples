@@ -17,7 +17,7 @@ const ChatExample: NextPage = () => {
   }, [])
 
   const { ready, messages, sendMessage } = useChat(
-    'ws://localhost:8080',
+    process.env.NEXT_PUBLIC_WORLDQL_WS_URL!,
     username
   )
 
