@@ -5,20 +5,20 @@ import { Instruction } from 'worldql-ts-client'
 import { useWorldQL } from './useWorldQL'
 import type { OnMessage } from './useWorldQL'
 
+interface OutgoingMessage {
+  username: string
+  text: string
+}
+
+export interface ChatMessage extends OutgoingMessage {
+  colour: string
+  timestamp: Date
+  key: string
+}
+
 export const useChat = (url: string, username: string, maxMessages = 50) => {
-  interface OutgoingMessage {
-    username: string
-    text: string
-  }
-
-  interface Message extends OutgoingMessage {
-    colour: string
-    timestamp: Date
-    key: string
-  }
-
-  type Action = { type: 'append'; data: Message } | { type: 'clear' }
-  const [messages, dispatch] = useReducer<Reducer<Message[], Action>>(
+  type Action = { type: 'append'; data: ChatMessage } | { type: 'clear' }
+  const [messages, dispatch] = useReducer<Reducer<ChatMessage[], Action>>(
     (state, action) => {
       switch (action.type) {
         case 'append': {
@@ -58,7 +58,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
       .toString(16)
       .slice(0, 6)
 
-    const incoming: Message = {
+    const incoming: ChatMessage = {
       username,
       text,
       colour,
