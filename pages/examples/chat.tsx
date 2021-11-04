@@ -16,8 +16,7 @@ const ChatExample: NextPage = () => {
 
   const { ready, messages, sendMessage } = useChat(
     'ws://localhost:8080',
-    username,
-    3
+    username
   )
 
   const onSend = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
@@ -45,9 +44,10 @@ const ChatExample: NextPage = () => {
               Your username is:&nbsp;<strong>{username}</strong>
             </h2>
 
-            {messages.map(([username, text], i) => (
-              <p key={i}>
-                <strong>{username}:</strong>&nbsp;{text}
+            {messages.map(({ username, text, timestamp, key }) => (
+              <p key={key}>
+                [{timestamp.toLocaleTimeString()}] <strong>{username}:</strong>
+                &nbsp;{text}
               </p>
             ))}
 

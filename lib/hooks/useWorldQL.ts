@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Client as WorldQLClient } from 'worldql-ts-client'
-import type { Message } from 'worldql-ts-client'
+import type { IncomingMessage } from 'worldql-ts-client'
 
-export type OnMessage = (message: Message) => void
+export type OnMessage = (message: IncomingMessage) => void
 
 export const useWorldQL = (url: string, onMessage?: OnMessage) => {
   const clientRef = useRef<WorldQLClient | null>(null)

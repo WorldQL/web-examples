@@ -1,3 +1,4 @@
+import fnv1a from '@sindresorhus/fnv1a'
 import { useCallback, useReducer } from 'react'
 import type { Reducer } from 'react'
 import { Instruction } from 'worldql-ts-client'
@@ -5,10 +6,18 @@ import { useWorldQL } from './useWorldQL'
 import type { OnMessage } from './useWorldQL'
 
 export const useChat = (url: string, username: string, maxMessages = 50) => {
-  type MessagePair = [username: string, message: string]
-  type Action = { type: 'append'; data: MessagePair } | { type: 'clear' }
+  interface OutgoingMessage {
+    username: string
+    text: string
+  }
 
-  const [messages, dispatch] = useReducer<Reducer<MessagePair[], Action>>(
+  interface Message extends OutgoingMessage {
+    timestamp: Date
+    key: string
+  }
+
+  type Action = { type: 'append'; data: Message } | { type: 'clear' }
+  const [messages, dispatch] = useReducer<Reducer<Message[], Action>>(
     (state, action) => {
       switch (action.type) {
         case 'append': {
@@ -34,26 +43,40 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
     const json = new TextDecoder().decode(message.flex)
     const data = JSON.parse(json) as unknown
 
-    if (!Array.isArray(data)) return
-    if (data.length !== 2) return
+    if (typeof data !== 'object') return
+    if (data === null) return
 
-    const [username, text] = data as unknown[]
+    const { username, text } = data as Record<string, unknown>
     if (typeof username !== 'string') return
     if (typeof text !== 'string') return
 
-    dispatch({ type: 'append', data: [username, text] })
+    const timestamp = new Date()
+    const keyData = `${message.senderUuid}${json}${timestamp.getTime()}`
+    const key = fnv1a(keyData).toString(16)
+
+    const incoming: Message = {
+      username,
+      text,
+      timestamp,
+      key,
+    }
+
+    dispatch({ type: 'append', data: incoming })
   }, [])
 
   const { ready, sendMessage: sendWQLMessage } = useWorldQL(url, onMessage)
 
   const sendMessage = useCallback(
-    (message: string) => {
-      const pair: MessagePair = [username, message]
+    (text: string) => {
+      const message: OutgoingMessage = {
+        username,
+        text,
+      }
 
       sendWQLMessage({
         worldName: '@global',
         instruction: Instruction.GlobalMessage,
-        flex: new TextEncoder().encode(JSON.stringify(pair)),
+        flex: new TextEncoder().encode(JSON.stringify(message)),
       })
     },
     [username, sendWQLMessage]
