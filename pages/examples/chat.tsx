@@ -82,7 +82,7 @@ const ChatExample: NextPage = () => {
 
             <button
               type='button'
-              className='py-2 px-4 text-white bg-purple-600 block shadow-sm rounded-md hover:shadow-md motion-safe:transition-shadow'
+              className='py-2 px-4 text-white bg-purple-600 hover:bg-purple-500 block shadow-sm rounded-md hover:shadow-md motion-safe:transition-all disabled:opacity-50 disabled:cursor-not-allowed'
               disabled={!ready || text === ''}
               onClick={onSend}
             >
