@@ -22,8 +22,9 @@ const Home: NextPage = () => (
       </p>
 
       <Heading>Examples and Demos</Heading>
-      <ul>
+      <ul className='flex flex-col'>
         <Link href='/examples/chat'>Chat</Link>
+        <Link href='/examples/cursors'>Cursors</Link>
       </ul>
     </Page>
   </>

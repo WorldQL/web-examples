@@ -5,6 +5,8 @@ import { Instruction } from 'worldql-ts-client'
 import { useWorldQL } from './useWorldQL'
 import type { OnMessage } from './useWorldQL'
 
+const WORLD_NAME = 'demo/cursors'
+
 interface OutgoingMessage {
   username: string
   text: string
@@ -39,6 +41,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
   )
 
   const onMessage = useCallback<OnMessage>(message => {
+    if (message.worldName !== WORLD_NAME) return
     if (message.flex === undefined) return
 
     const json = new TextDecoder().decode(message.flex)
@@ -79,7 +82,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
       }
 
       sendWQLMessage({
-        worldName: '@global',
+        worldName: WORLD_NAME,
         instruction: Instruction.GlobalMessage,
         flex: new TextEncoder().encode(JSON.stringify(message)),
       })
