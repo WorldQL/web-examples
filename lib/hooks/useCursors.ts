@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { Instruction } from '@worldql/client'
+import { useCallback } from 'react'
 import type { RefObject } from 'react'
-import { Instruction } from 'worldql-ts-client'
 import { useWorldQL } from './useWorldQL'
 import type { OnMessage } from './useWorldQL'
 
@@ -18,7 +18,6 @@ export const useCursors = (
       if (message.worldName !== WORLD_NAME) return
       if (message.flex === undefined) return
 
-      const uuid = message.senderUuid
       const json = new TextDecoder().decode(message.flex)
       const data = JSON.parse(json) as unknown
 

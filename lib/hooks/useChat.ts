@@ -1,7 +1,7 @@
 import fnv1a from '@sindresorhus/fnv1a'
+import { Instruction } from '@worldql/client'
 import { useCallback, useReducer } from 'react'
 import type { Reducer } from 'react'
-import { Instruction } from 'worldql-ts-client'
 import { useWorldQL } from './useWorldQL'
 import type { OnMessage } from './useWorldQL'
 

@@ -1,6 +1,6 @@
+import { Client as WorldQLClient } from '@worldql/client'
+import type { IncomingMessage } from '@worldql/client'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Client as WorldQLClient } from 'worldql-ts-client'
-import type { IncomingMessage } from 'worldql-ts-client'
 
 export type OnMessage = (message: IncomingMessage) => void
 
