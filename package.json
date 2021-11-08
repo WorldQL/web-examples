@@ -1,5 +1,5 @@
 {
-  "name": "worldql-ts-examples",
+  "name": "@worldql/web-examples",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "test": "yarn run lint"
   },
   "engines": {
-    "node": ">=14"
+    "node": "^14.13.1 || >=16.0.0"
   },
   "dependencies": {
     "@sindresorhus/fnv1a": "^3.0.0",
