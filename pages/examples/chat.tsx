@@ -16,7 +16,7 @@ const ChatExample: NextPage = () => {
     setText(ev.target.value)
   }, [])
 
-  const { ready, messages, sendMessage } = useChat(
+  const { ready, nameColour, messages, sendMessage } = useChat(
     process.env.NEXT_PUBLIC_WORLDQL_WS_URL!,
     username
   )
@@ -52,7 +52,8 @@ const ChatExample: NextPage = () => {
               'Loading...'
             ) : (
               <>
-                Your username is&nbsp;<strong>{username}</strong>.
+                Your username is&nbsp;
+                <strong style={{ color: nameColour }}>{username}</strong>.
               </>
             )}
           </h2>

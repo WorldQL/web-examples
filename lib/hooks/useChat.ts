@@ -1,5 +1,5 @@
 import fnv1a from '@sindresorhus/fnv1a'
-import { useCallback, useReducer } from 'react'
+import { useCallback, useMemo, useReducer } from 'react'
 import type { Reducer } from 'react'
 import { useWorldQL } from './useWorldQL'
 import type { Handler } from './useWorldQL'
@@ -15,6 +15,7 @@ export interface ChatMessage extends OutgoingMessage {
   colour: string
   timestamp: Date
   key: string
+  system: boolean
 }
 
 export const useChat = (url: string, username: string, maxMessages = 50) => {
@@ -39,12 +40,17 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
     []
   )
 
+  const calculateColour = useCallback((uuid: string, username: string) => {
+    const hex = fnv1a(`${uuid}${username}`).toString(16).slice(0, 6)
+    return `#${hex}`
+  }, [])
+
   const calculateMessage = useCallback(
-    (username: string, text: string, uuid: string) => {
+    (username: string, text: string, uuid: string, system = false) => {
       const timestamp = new Date()
       const keyData = `${uuid}${timestamp.getTime()}`
       const key = fnv1a(keyData).toString(16)
-      const colour = fnv1a(`${uuid}${username}`).toString(16).slice(0, 6)
+      const colour = calculateColour(uuid, username)
 
       const message: ChatMessage = {
         username,
@@ -52,11 +58,12 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
         colour,
         timestamp,
         key,
+        system,
       }
 
       return message
     },
-    []
+    [calculateColour]
   )
 
   const onMessage = useCallback<Handler<'globalMessage'>>(
@@ -100,5 +107,10 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
     [uuid, username, calculateMessage, globalMessage]
   )
 
-  return { ready, messages, sendMessage }
+  const nameColour = useMemo<string>(
+    () => calculateColour(uuid, username),
+    [uuid, username, calculateColour]
+  )
+
+  return { ready, nameColour, messages, sendMessage }
 }
