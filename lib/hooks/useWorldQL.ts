@@ -6,6 +6,7 @@ export type Handler<T extends keyof ClientEvents> = (
 ) => void
 
 interface Handlers {
+  ready?: Handler<'ready'>
   peerConnect?: Handler<'peerConnect'>
   peerDisconnect?: Handler<'peerDisconnect'>
   globalMessage?: Handler<'globalMessage'>
@@ -26,36 +27,43 @@ export const useWorldQL = (url: string, handlers?: Handlers) => {
     }
   }, [url])
 
-  const onReady = useCallback(() => {
+  const onReady = useCallback<Handler<'ready'>>(() => {
     setReady(true)
     setUuid(clientRef.current!.uuid)
-  }, [])
 
-  const onDisconnect = useCallback(() => {
+    if (typeof handlers?.ready === 'function') {
+      handlers.ready()
+    }
+  }, [handlers])
+
+  const onDisconnect = useCallback<Handler<'disconnect'>>(() => {
     setReady(false)
     setUuid('')
   }, [])
 
   const handlePeerConnect = useCallback<Handler<'peerConnect'>>(
     (...args) => {
-      if (typeof handlers?.peerConnect === 'function')
+      if (typeof handlers?.peerConnect === 'function') {
         handlers.peerConnect(...args)
+      }
     },
     [handlers]
   )
 
   const handlePeerDisconnect = useCallback<Handler<'peerDisconnect'>>(
     (...args) => {
-      if (typeof handlers?.peerDisconnect === 'function')
+      if (typeof handlers?.peerDisconnect === 'function') {
         handlers.peerDisconnect(...args)
+      }
     },
     [handlers]
   )
 
   const handleGlobalMessage = useCallback<Handler<'globalMessage'>>(
     (...args) => {
-      if (typeof handlers?.globalMessage === 'function')
+      if (typeof handlers?.globalMessage === 'function') {
         handlers.globalMessage(...args)
+      }
     },
     [handlers]
   )
