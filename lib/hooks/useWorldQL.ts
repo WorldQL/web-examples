@@ -14,6 +14,7 @@ interface Handlers {
 export const useWorldQL = (url: string, handlers?: Handlers) => {
   const clientRef = useRef<WorldQLClient | null>(null)
   const [ready, setReady] = useState<boolean>(false)
+  const [uuid, setUuid] = useState<string>('')
 
   useEffect(() => {
     const client = new WorldQLClient({ url })
@@ -27,10 +28,12 @@ export const useWorldQL = (url: string, handlers?: Handlers) => {
 
   const onReady = useCallback(() => {
     setReady(true)
+    setUuid(clientRef.current!.uuid)
   }, [])
 
   const onDisconnect = useCallback(() => {
     setReady(false)
+    setUuid('')
   }, [])
 
   const handlePeerConnect = useCallback<Handler<'peerConnect'>>(
@@ -88,5 +91,5 @@ export const useWorldQL = (url: string, handlers?: Handlers) => {
     clientRef.current.globalMessage(...args)
   }, [])
 
-  return { ready, globalMessage }
+  return { ready, uuid, globalMessage }
 }
