@@ -1,5 +1,5 @@
 import fnv1a from '@sindresorhus/fnv1a'
-import { useCallback, useMemo, useReducer } from 'react'
+import { useCallback, useMemo, useReducer, useRef } from 'react'
 import type { Reducer } from 'react'
 import { useWorldQL } from './useWorldQL'
 import type { Handler } from './useWorldQL'
@@ -19,6 +19,8 @@ export interface ChatMessage extends OutgoingMessage {
 }
 
 export const useChat = (url: string, username: string, maxMessages = 50) => {
+  const seenClientsRef = useRef(new Map<string, string>())
+
   type Action = { type: 'append'; data: ChatMessage } | { type: 'clear' }
   const [messages, dispatch] = useReducer<Reducer<ChatMessage[], Action>>(
     (state, action) => {
@@ -83,11 +85,41 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
 
       const incoming = calculateMessage(username, text, senderUuid)
       dispatch({ type: 'append', data: incoming })
+
+      if (seenClientsRef.current) {
+        seenClientsRef.current.set(senderUuid, username)
+
+        // TODO: Remove
+        console.log(seenClientsRef.current)
+      }
     },
     [calculateMessage]
   )
 
+  const onDisconnect = useCallback<Handler<'peerDisconnect'>>(
+    uuid => {
+      if (!seenClientsRef.current) return
+      const seenClients = seenClientsRef.current
+
+      const name = seenClients.get(uuid)
+      if (name !== undefined) {
+        seenClients.delete(uuid)
+
+        const message = calculateMessage(
+          '[SYSTEM]',
+          `${name} has disconnected.`,
+          '',
+          true
+        )
+
+        dispatch({ type: 'append', data: message })
+      }
+    },
+    [calculateMessage, dispatch]
+  )
+
   const { ready, uuid, globalMessage } = useWorldQL(url, {
+    peerDisconnect: onDisconnect,
     globalMessage: onMessage,
   })
 
