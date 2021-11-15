@@ -1,11 +1,10 @@
 import fnv1a from '@sindresorhus/fnv1a'
-import { Instruction } from '@worldql/client'
 import { useCallback, useReducer } from 'react'
 import type { Reducer } from 'react'
 import { useWorldQL } from './useWorldQL'
-import type { OnMessage } from './useWorldQL'
+import type { Handler } from './useWorldQL'
 
-const WORLD_NAME = 'demo/cursors'
+const WORLD_NAME = 'demo/chat'
 
 interface OutgoingMessage {
   username: string
@@ -40,39 +39,50 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
     []
   )
 
-  const onMessage = useCallback<OnMessage>(message => {
-    if (message.worldName !== WORLD_NAME) return
-    if (message.flex === undefined) return
+  const calculateMessage = useCallback(
+    (username: string, text: string, uuid: string) => {
+      const timestamp = new Date()
+      const keyData = `${uuid}${timestamp.getTime()}`
+      const key = fnv1a(keyData).toString(16)
+      const colour = fnv1a(`${uuid}${username}`).toString(16).slice(0, 6)
 
-    const json = new TextDecoder().decode(message.flex)
-    const data = JSON.parse(json) as unknown
+      const message: ChatMessage = {
+        username,
+        text,
+        colour,
+        timestamp,
+        key,
+      }
 
-    if (typeof data !== 'object') return
-    if (data === null) return
+      return message
+    },
+    []
+  )
 
-    const { username, text } = data as Record<string, unknown>
-    if (typeof username !== 'string') return
-    if (typeof text !== 'string') return
+  const onMessage = useCallback<Handler<'globalMessage'>>(
+    (senderUuid, worldName, { flex }) => {
+      if (worldName !== WORLD_NAME) return
+      if (flex === undefined) return
 
-    const timestamp = new Date()
-    const keyData = `${message.senderUuid}${json}${timestamp.getTime()}`
-    const key = fnv1a(keyData).toString(16)
-    const colour = fnv1a(`${message.senderUuid}${username}`)
-      .toString(16)
-      .slice(0, 6)
+      const json = new TextDecoder().decode(flex)
+      const data = JSON.parse(json) as unknown
 
-    const incoming: ChatMessage = {
-      username,
-      text,
-      colour,
-      timestamp,
-      key,
-    }
+      if (typeof data !== 'object') return
+      if (data === null) return
 
-    dispatch({ type: 'append', data: incoming })
-  }, [])
+      const { username, text } = data as Record<string, unknown>
+      if (typeof username !== 'string') return
+      if (typeof text !== 'string') return
 
-  const { ready, sendMessage: sendWQLMessage } = useWorldQL(url, onMessage)
+      const incoming = calculateMessage(username, text, senderUuid)
+      dispatch({ type: 'append', data: incoming })
+    },
+    [calculateMessage]
+  )
+
+  const { ready, uuid, globalMessage } = useWorldQL(url, {
+    globalMessage: onMessage,
+  })
 
   const sendMessage = useCallback(
     (text: string) => {
@@ -81,13 +91,13 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
         text,
       }
 
-      sendWQLMessage({
-        worldName: WORLD_NAME,
-        instruction: Instruction.GlobalMessage,
-        flex: new TextEncoder().encode(JSON.stringify(message)),
-      })
+      const incoming = calculateMessage(username, text, uuid)
+      dispatch({ type: 'append', data: incoming })
+
+      const flex = new TextEncoder().encode(JSON.stringify(message))
+      globalMessage(WORLD_NAME, { flex })
     },
-    [username, sendWQLMessage]
+    [uuid, username, calculateMessage, globalMessage]
   )
 
   return { ready, messages, sendMessage }
