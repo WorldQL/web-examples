@@ -48,7 +48,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
   }, [])
 
   const calculateMessage = useCallback(
-    (username: string, text: string, uuid: string, system = false) => {
+    (username: string, text: string, uuid: string, system?: boolean) => {
       const timestamp = new Date()
       const keyData = `${uuid}${timestamp.getTime()}`
       const key = fnv1a(keyData).toString(16)
@@ -60,7 +60,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
         colour,
         timestamp,
         key,
-        system,
+        system: system ?? false,
       }
 
       return message
@@ -86,12 +86,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
       const incoming = calculateMessage(username, text, senderUuid)
       dispatch({ type: 'append', data: incoming })
 
-      if (seenClientsRef.current) {
-        seenClientsRef.current.set(senderUuid, username)
-
-        // TODO: Remove
-        console.log(seenClientsRef.current)
-      }
+      seenClientsRef.current.set(senderUuid, username)
     },
     [calculateMessage]
   )
