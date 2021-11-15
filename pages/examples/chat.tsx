@@ -59,15 +59,18 @@ const ChatExample: NextPage = () => {
           </h2>
 
           <div className='flex-1'>
-            {messages.map(({ username, text, colour, timestamp, key }) => (
-              <Message
-                key={key}
-                username={username}
-                text={text}
-                colour={colour}
-                timestamp={timestamp}
-              />
-            ))}
+            {messages.map(
+              ({ username, text, colour, timestamp, key, system }) => (
+                <Message
+                  key={key}
+                  username={username}
+                  text={text}
+                  colour={colour}
+                  timestamp={timestamp}
+                  system={system}
+                />
+              )
+            )}
           </div>
 
           <div className='flex mt-2'>
