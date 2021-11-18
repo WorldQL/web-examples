@@ -614,10 +614,10 @@
     "@typescript-eslint/types" "5.3.1"
     eslint-visitor-keys "^3.0.0"
 
-"@worldql/client@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@worldql/client/-/client-0.0.4.tgz#fb56528f102b7498497f13321c47f484133c2138"
-  integrity sha512-SIKYOpdkbOiX5V3Eqt9mFUH5qJ6au3pKbqamZYw5vup/VxHsM3HBA1dO6izXkeYyXiedS6D2upVm+026CnFxFA==
+"@worldql/client@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@worldql/client/-/client-0.0.6.tgz#ffb94e5c564e40e6ade6164a775825ff0f1aaa7e"
+  integrity sha512-8kFPDXYEKvRbV0zvfCQi54clocgfHIeA9CT0w9mCki8iGL6FDzBuWMP1+lhB16bNPHLj69egNx5fIV9y8l2BfQ==
   dependencies:
     eventemitter3 "^4.0.7"
     flatbuffers "^2.0.4"
