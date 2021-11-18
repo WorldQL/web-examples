@@ -1,6 +1,6 @@
 import fnv1a from '@sindresorhus/fnv1a'
 import { Replication } from '@worldql/client'
-import { useCallback, useMemo, useReducer, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import type { Reducer } from 'react'
 import { useWorldQL } from './useWorldQL'
 import type { Handler } from './useWorldQL'
@@ -114,10 +114,16 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
     [calculateMessage, dispatch]
   )
 
-  const { ready, uuid, globalMessage } = useWorldQL(url, {
+  const { ready, uuid, areaSubscribe, globalMessage } = useWorldQL(url, {
     peerDisconnect: onDisconnect,
     globalMessage: onMessage,
   })
+
+  useEffect(() => {
+    if (ready) {
+      areaSubscribe(WORLD_NAME, { x: 0, y: 0, z: 0 })
+    }
+  }, [ready, areaSubscribe])
 
   const sendMessage = useCallback(
     (text: string) => {

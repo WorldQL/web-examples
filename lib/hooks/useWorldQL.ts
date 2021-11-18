@@ -90,6 +90,15 @@ export const useWorldQL = (url: string, handlers?: Handlers) => {
     handleGlobalMessage,
   ])
 
+  type AreaSubscribe = InstanceType<typeof WorldQLClient>['areaSubscribe']
+  const areaSubscribe = useCallback<AreaSubscribe>((...args) => {
+    if (clientRef.current === null) {
+      throw new Error('client is null')
+    }
+
+    clientRef.current.areaSubscribe(...args)
+  }, [])
+
   type SendGlobalMessage = InstanceType<typeof WorldQLClient>['globalMessage']
   const globalMessage = useCallback<SendGlobalMessage>((...args) => {
     if (clientRef.current === null) {
@@ -99,5 +108,5 @@ export const useWorldQL = (url: string, handlers?: Handlers) => {
     clientRef.current.globalMessage(...args)
   }, [])
 
-  return { ready, uuid, globalMessage }
+  return { ready, uuid, areaSubscribe, globalMessage }
 }

@@ -90,10 +90,16 @@ const useCursorsClient = (
     coordsRef.current.delete(uuid)
   }, [])
 
-  const { ready, globalMessage } = useWorldQL(url, {
+  const { ready, areaSubscribe, globalMessage } = useWorldQL(url, {
     peerDisconnect: onDisconnect,
     globalMessage: onMessage,
   })
+
+  useEffect(() => {
+    if (ready) {
+      areaSubscribe(WORLD_NAME, { x: 0, y: 0, z: 0 })
+    }
+  }, [ready, areaSubscribe])
 
   const sendMessage = useCallback(
     (parameter: string, data?: Record<string, unknown>) => {
