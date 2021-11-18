@@ -1,4 +1,5 @@
 import fnv1a from '@sindresorhus/fnv1a'
+import { Replication } from '@worldql/client'
 import { useCallback, useMemo, useReducer, useRef } from 'react'
 import type { Reducer } from 'react'
 import { useWorldQL } from './useWorldQL'
@@ -129,7 +130,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
       dispatch({ type: 'append', data: incoming })
 
       const flex = new TextEncoder().encode(JSON.stringify(message))
-      globalMessage(WORLD_NAME, { flex })
+      globalMessage(WORLD_NAME, Replication.ExceptSelf, { flex })
     },
     [uuid, username, calculateMessage, globalMessage]
   )

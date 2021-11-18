@@ -1,3 +1,4 @@
+import { Replication } from '@worldql/client'
 import { useCallback, useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 import { useAnimationFrame } from './useAnimationFrame'
@@ -99,7 +100,7 @@ const useCursorsClient = (
       if (!ready) return
 
       const flex = data && new TextEncoder().encode(JSON.stringify(data))
-      globalMessage(WORLD_NAME, { parameter, flex })
+      globalMessage(WORLD_NAME, Replication.ExceptSelf, { parameter, flex })
     },
     [ready, globalMessage]
   )
