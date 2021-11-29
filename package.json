@@ -12,6 +12,7 @@
     "node": "^14.13.1 || >=16.0.0"
   },
   "dependencies": {
+    "@msgpack/msgpack": "^2.7.1",
     "@sindresorhus/fnv1a": "^3.0.0",
     "@worldql/client": "^0.0.6",
     "memorable-moniker": "^0.5.1",

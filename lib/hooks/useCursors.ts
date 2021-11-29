@@ -1,3 +1,4 @@
+import { decode, encode } from '@msgpack/msgpack'
 import { Replication } from '@worldql/client'
 import { useCallback, useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
@@ -65,9 +66,7 @@ const useCursorsClient = (
         case 'mousemove': {
           if (flex === undefined) return
 
-          const json = new TextDecoder().decode(flex)
-          const data = JSON.parse(json) as unknown
-
+          const data = decode(flex)
           if (typeof data !== 'object') return
           if (data === null) return
 
@@ -105,7 +104,7 @@ const useCursorsClient = (
     (parameter: string, data?: Record<string, unknown>) => {
       if (!ready) return
 
-      const flex = data && new TextEncoder().encode(JSON.stringify(data))
+      const flex = data && encode(data)
       globalMessage(WORLD_NAME, Replication.ExceptSelf, { parameter, flex })
     },
     [ready, globalMessage]

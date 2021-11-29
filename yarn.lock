@@ -308,6 +308,11 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@msgpack/msgpack@^2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@msgpack/msgpack/-/msgpack-2.7.1.tgz#f01954baadc502f3c82e9c3f72c740ce65eae1cc"
+  integrity sha512-ApwiSL2c9ObewdOE/sqt788P1C5lomBOHyO8nUBCr4ofErBCnYQ003NtJ8lS9OQZc11ximkbmgAZJjB8y6cCdA==
+
 "@napi-rs/triples@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@napi-rs/triples/-/triples-1.0.3.tgz#76d6d0c3f4d16013c61e45dfca5ff1e6c31ae53c"

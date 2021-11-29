@@ -1,3 +1,4 @@
+import { decode, encode } from '@msgpack/msgpack'
 import fnv1a from '@sindresorhus/fnv1a'
 import { Replication } from '@worldql/client'
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
@@ -74,9 +75,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
       if (worldName !== WORLD_NAME) return
       if (flex === undefined) return
 
-      const json = new TextDecoder().decode(flex)
-      const data = JSON.parse(json) as unknown
-
+      const data = decode(flex)
       if (typeof data !== 'object') return
       if (data === null) return
 
@@ -135,7 +134,7 @@ export const useChat = (url: string, username: string, maxMessages = 50) => {
       const incoming = calculateMessage(username, text, uuid)
       dispatch({ type: 'append', data: incoming })
 
-      const flex = new TextEncoder().encode(JSON.stringify(message))
+      const flex = encode(message)
       globalMessage(WORLD_NAME, Replication.ExceptSelf, { flex })
     },
     [uuid, username, calculateMessage, globalMessage]
