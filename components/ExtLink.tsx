@@ -9,7 +9,7 @@ export const ExtLink: FC<Props> = ({ href, children }) => (
     href={href}
     target='_blank'
     rel='noopener noreferrer'
-    className='motion-safe:transition-colors text-purple-700 hover:text-purple-900 dark:hover:text-white'
+    className='motion-safe:transition-colors text-violet-700 hover:text-violet-900 dark:hover:text-white'
   >
     {children}
   </a>
