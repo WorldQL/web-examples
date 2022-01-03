@@ -13,6 +13,7 @@ interface Handlers {
 }
 
 export const useWorldQL = (url: string, handlers?: Handlers) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const clientRef = useRef<WorldQLClient | null>(null)
   const [ready, setReady] = useState<boolean>(false)
   const [uuid, setUuid] = useState<string>('')
